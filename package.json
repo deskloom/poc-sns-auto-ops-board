@@ -1,0 +1,9 @@
+{
+  "name": "sns-auto-ops-board-poc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SNS自動運用ボードのPOC（事前生成の投稿案・審査・予約キュー表示）",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

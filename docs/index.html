@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SNS自動運用ボード（POC）</title>
+<style>
+  :root { --bg: #f6f4ee; --card: #ffffff; --ink: #2b2b2b; --muted: #6b675f; --line: #e4dfd3; --accent: #2f6b4f; --warn: #a3541a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; line-height: 1.7; word-break: normal; overflow-wrap: break-word; }
+  header { background: #22352c; color: #fff; padding: 28px 20px; }
+  header .wrap, main.wrap { max-width: 960px; margin: 0 auto; }
+  header h1 { margin: 0 0 8px; font-size: 24px; }
+  header p { margin: 4px 0; color: #d9d4c7; font-size: 14px; }
+  main.wrap { padding: 20px 16px 48px; }
+  .concept { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px; }
+  .concept h2 { margin: 0 0 8px; font-size: 17px; }
+  .concept dl { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; margin: 0; font-size: 14px; }
+  .concept dt { color: var(--muted); }
+  .concept dd { margin: 0; }
+  .note { background: #eef4ee; border: 1px solid #cfdfcf; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 18px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } header h1 { font-size: 20px; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .card .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .badge { display: inline-block; font-size: 12px; border-radius: 999px; padding: 2px 10px; border: 1px solid var(--line); background: #faf8f2; }
+  .badge.x { background: #e8f0f5; border-color: #c6d9e4; }
+  .badge.insta { background: #f9e9ef; border-color: #e6c2cf; }
+  .badge.ok { background: #e7f2e7; border-color: #bcd8bc; }
+  .badge.warn { background: #fbeeDD; border-color: #e3c39a; color: var(--warn); }
+  .score { font-size: 13px; color: var(--muted); }
+  .body { font-size: 15px; margin: 8px 0; }
+  .reason { font-size: 13px; background: #faf8f2; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin: 6px 0; }
+  .meta { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  footer { max-width: 960px; margin: 0 auto; padding: 0 16px 32px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>夜のリセット習慣アカウント：自動運用ボード</h1>
+    <p>架空の商品（つきよブレンド・架空のハーブティー）を紹介する、架空の暮らし系アカウントの予約キューです。</p>
+    <p>投稿文と評価はAI（大規模言語モデル）で事前に生成した結果を表示しています。実運用ではAPIで都度生成します。</p>
+  </div>
+</header>
+<main class="wrap">
+  <section class="concept">
+    <h2>企画の設定（すべて架空）</h2>
+    <dl>
+      <dt>媒体</dt><dd>X（短文）と Instagram（写真＋長文）を使い分ける</dd>
+      <dt>軸</dt><dd>夜の区切り作り。湯気・3分待つ・灯りを落とす、の3要素</dd>
+      <dt>審査</dt><dd>文字数と効果の断定表現を確認し、通ったものだけ予約する</dd>
+    </dl>
+  </section>
+  <div class="note" id="summary">読み込み中…</div>
+  <div class="grid" id="list"></div>
+</main>
+<footer>
+  <p>表示中の7件はすべて架空のデータです。人物・団体との関係はありません。AI（大規模言語モデル）で事前に生成した結果を表示しています。</p>
+</footer>
+<script>
+var POSTS = [
+  {"id":"p01","platform":"X","body":"今夜は早めに切り上げて、白湯ならぬハーブティー。つきよブレンド（架空）はカモミール多めで寝る前の合図にちょうどいい。","score":92,"reason_match":"一致: 夜のリセットという企画に沿い、就寝前の場面を指定している。商品の特徴（カモミール多め）に触れている。","reason_gap":"不足: 初見の人には商品が架空の試作品だと伝わりにくい。固定の紹介文を1行足すと親切。","scheduled_at":"2026-10-09 21:00","status":"承認済み","checks":{"length_ok":true,"ng_ok":true}},
+  {"id":"p02","platform":"Instagram","body":"残業終わりのキッチンで。マグカップ1杯の湯気と3分待つ時間。それだけで「今日は終わり」と区切りがつく。つきよブレンド（架空）はノンカフェイン。#夜のリセット #架空の暮らし","score":88,"reason_match":"一致: 写真と合わせやすい生活場面があり、ノンカフェインという夜向けの条件を満たす。改行とハッシュタグが型通り。","reason_gap":"不足: 味の描写が薄い。香りの一言（例: りんごのような甘さ）を足すと保存されやすい。","scheduled_at":"2026-10-10 20:00","status":"承認済み","checks":{"length_ok":true,"ng_ok":true}},
+  {"id":"p03","platform":"X","body":"デスク横に置くだけ作戦。カフェインを避けたい夜は、つきよブレンド（架空）のティーバッグを1つ。片付け前に淹れて飲み切ったら寝る。","score":85,"reason_match":"一致: 行動の手順が具体的で真似しやすい。夜・カフェイン回避という条件に合っている。","reason_gap":"不足: 淹れ方（湯量・待ち時間）がない。140字以内で「湯150ml・3分」を入れると再現性が上がる。","scheduled_at":"2026-10-11 21:00","status":"承認済み","checks":{"length_ok":true,"ng_ok":true}},
+  {"id":"p04","platform":"Instagram","body":"週末の下ごしらえ。月曜の夜用にティーバッグを3つ小分けにする。それだけで平日の夜が少し楽しみになる。つきよブレンド（架空）は個包装の想定。#夜の準備 #架空の暮らし","score":81,"reason_match":"一致: 週末仕込みという企画の連載性があり、個包装という商品設定を活かしている。","reason_gap":"不足: 写真の指示がない。投稿時に「小分けの俯瞰写真」と添える必要がある。","scheduled_at":"2026-10-12 19:00","status":"承認済み","checks":{"length_ok":true,"ng_ok":true}},
+  {"id":"p05","platform":"X","body":"寝る前のスマホを置く合図にしたい。お茶を淹れたら台所で3分待つ。その間は画面を見ない。それだけの習慣の話。","score":77,"reason_match":"一致: 企画の軸（夜の区切り作り）に沿い、誰でもできる手順になっている。","reason_gap":"不足: 商品への言及がなくPRとして弱い。最後に商品名の一言が必要。現状のため要確認とした。","scheduled_at":"2026-10-13 21:00","status":"要確認","checks":{"length_ok":true,"ng_ok":true}},
+  {"id":"p06","platform":"Instagram","body":"雨の夜の過ごし方。部屋の灯りを一つ落として、温かいカップを両手で持つ。つきよブレンド（架空）は後味が軽いので寝る前にも重くない。#雨の夜 #架空の暮らし","score":74,"reason_match":"一致: 天気と結びつけた時節の話題があり、後味の軽さという商品特徴に触れている。","reason_gap":"不足: 雨の日以外には使いにくい。本文の冒頭を天気に依存しない形に直すと再利用できる。","scheduled_at":"2026-10-14 20:00","status":"承認済み","checks":{"length_ok":true,"ng_ok":true}},
+  {"id":"p07","platform":"X","body":"ぐっすり眠れて疲れが取れるお茶です。毎日飲むのがおすすめ。つきよブレンド（架空）をぜひどうぞ。","score":52,"reason_match":"一致: 商品名の記載と呼びかけがあり、短さはX向けの範囲内。","reason_gap":"不足: 効果を断定する言い方で審査に通らない。具体的な場面がなく企画にも合わないため要確認とした。","scheduled_at":"2026-10-15 21:00","status":"要確認","checks":{"length_ok":true,"ng_ok":false}}
+];
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function render(){
+  var list = document.getElementById("list");
+  var ok = POSTS.filter(function(p){ return p.status === "承認済み"; }).length;
+  var hold = POSTS.length - ok;
+  document.getElementById("summary").textContent = "予約キュー " + POSTS.length + " 件（承認済み " + ok + " 件・要確認 " + hold + " 件）を評価の高い順に表示しています。";
+  list.innerHTML = POSTS.map(function(p){
+    var pf = p.platform === "X" ? "badge x" : "badge insta";
+    var st = p.status === "承認済み" ? "badge ok" : "badge warn";
+    var chk = (p.checks.length_ok ? "文字数 OK" : "文字数 NG") + "・" + (p.checks.ng_ok ? "表現 OK" : "表現 NG");
+    return '<article class="card">' +
+      '<div class="row"><span class="' + pf + '">' + esc(p.platform) + '</span>' +
+      '<span class="' + st + '">' + esc(p.status) + '</span>' +
+      '<span class="score">評価 ' + p.score + " 点・" + esc(chk) + "</span></div>" +
+      '<p class="body">' + esc(p.body) + "</p>" +
+      '<div class="reason">' + esc(p.reason_match) + "</div>" +
+      '<div class="reason">' + esc(p.reason_gap) + "</div>" +
+      '<div class="meta">予約: ' + esc(p.scheduled_at) + "・" + esc(p.id) + "</div>" +
+      "</article>";
+  }).join("");
+}
+render();
+</script>
+</body>
+</html>
